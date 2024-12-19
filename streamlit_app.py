@@ -19,8 +19,10 @@ def extract_article_data(url, user_date, image_url):
         body = ' '.join(p.text.strip() for p in soup.find_all('p'))
 
         # Ensure proper handling of special characters by decoding directly to UTF-8
-        headline = headline.encode('latin1').decode('utf-8', 'ignore')
-        body = body.encode('latin1').decode('utf-8', 'ignore')
+        #headline = headline.encode('latin1').decode('utf-8', 'ignore')
+        #body = body.encode('latin1').decode('utf-8', 'ignore')
+        headline = headline.encode('utf-8', 'ignore').decode('utf-8', 'ignore')
+        body = body.encode('utf-8', 'ignore').decode('utf-8', 'ignore')
 
         # Parse the provided date into the desired format
         try:
