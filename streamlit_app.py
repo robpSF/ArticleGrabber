@@ -3,21 +3,20 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
 from datetime import datetime
-import urllib3
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 
 def extract_article_data(url, user_date, image_url):
     try:
-        # Disable SSL verification for this request
-        response = requests.get(url, verify=False)
+        response = requests.get(url)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Example extraction logic; adjust based on site structure
         headline = soup.find('h1').text.strip() if soup.find('h1') else "No headline found"
         body = ' '.join(p.text.strip() for p in soup.find_all('p'))
+
+        # Ensure proper handling of special characters
+        headline = headline.encode('latin1').decode('utf-8', 'ignore')
+        body = body.encode('latin1').decode('utf-8', 'ignore')
 
         # Parse the provided date into the desired format
         try:
@@ -34,7 +33,6 @@ def extract_article_data(url, user_date, image_url):
 
     except Exception as e:
         return {"Headline": "Error", "Body": str(e), "Timestamp": "Error", "Image URL": "Error"}
-
 
 def main():
     st.title("News Article Scraper")
