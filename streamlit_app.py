@@ -3,10 +3,15 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
 from datetime import datetime
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 def extract_article_data(url, user_date, image_url):
     try:
-        response = requests.get(url)
+        # Disable SSL verification for this request
+        response = requests.get(url, verify=False)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -29,6 +34,7 @@ def extract_article_data(url, user_date, image_url):
 
     except Exception as e:
         return {"Headline": "Error", "Body": str(e), "Timestamp": "Error", "Image URL": "Error"}
+
 
 def main():
     st.title("News Article Scraper")
